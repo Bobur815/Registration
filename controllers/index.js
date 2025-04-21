@@ -1,5 +1,6 @@
 import fs from "fs"
 import path from "path"
+import { log } from "util";
 
 const GET = (req, res) => {
     let userJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "/db/users.json"), "utf-8"))
@@ -40,7 +41,16 @@ const REGISTER_POST = (req, res) => {
     res.status(201).json({ message: "Successfully registered" })
 }
 const LOGIN_POST = (req, res) => {
-    res.send("login")
+    let { email, password } = req.body
+    let registers = JSON.parse(fs.readFileSync(path.join(process.cwd(), "/db/register.json"), "utf-8"))
+    const login = registers.find(register => register.email === email && register.password === password)
+    if (login) {
+        return res.status(200).json({ "token": "QpwL5tke4Pnpja7X4" })
+    }
+    else {
+        return res.status(400).json({ "error": "Missing password" })
+    }
+
 }
 
 export default {
